@@ -1,0 +1,101 @@
+services:
+  cliente-db:
+    image: postgres:16
+    container_name: cliente-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${CLIENTE_DB_NAME}
+      POSTGRES_USER: ${CLIENTE_DB_USERNAME}
+      POSTGRES_PASSWORD: ${CLIENTE_DB_PASSWORD}
+    volumes:
+      - cliente-db-data:/var/lib/postgresql/data
+    ports:
+      - "${CLIENTE_DB_EXTERNAL_PORT}:${CLIENTE_DB_INTERNAL_PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CLIENTE_DB_USERNAME} -d ${CLIENTE_DB_NAME} || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - juri-network
+
+  ms-cliente:
+    build:
+      context: ..
+      dockerfile: infra/cliente.Dockerfile
+    container_name: ms-cliente
+    env_file: .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - CLIENTE_SERVICE_PORT=${CLIENTE_SERVICE_PORT}
+      - CLIENTE_DB_URL=jdbc:postgresql://${CLIENTE_DB_HOST}:${CLIENTE_DB_INTERNAL_PORT}/${CLIENTE_DB_NAME}
+      - CLIENTE_DB_USERNAME=${CLIENTE_DB_USERNAME}
+      - CLIENTE_DB_PASSWORD=${CLIENTE_DB_PASSWORD}
+    ports:
+      - "${CLIENTE_SERVICE_PORT}:${CLIENTE_SERVICE_PORT}"
+    depends_on:
+      cliente-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - juri-network
+
+  processo-db:
+    image: postgres:16
+    container_name: processo-db
+    env_file: .env
+    environment:
+      POSTGRES_DB: ${PROCESSO_DB_NAME}
+      POSTGRES_USER: ${PROCESSO_DB_USERNAME}
+      POSTGRES_PASSWORD: ${PROCESSO_DB_PASSWORD}
+    volumes:
+      - processo-db-data:/var/lib/postgresql/data
+    ports:
+      - "${PROCESSO_DB_EXTERNAL_PORT}:${PROCESSO_DB_INTERNAL_PORT}"
+    command: ["postgres", "-c", "port=${PROCESSO_DB_INTERNAL_PORT}"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PROCESSO_DB_USERNAME} -d ${PROCESSO_DB_NAME} -p ${PROCESSO_DB_INTERNAL_PORT} || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - juri-network
+
+  ms-processo:
+    build:
+      context: ..
+      dockerfile: infra/processo.Dockerfile
+    container_name: ms-processo
+    env_file: .env
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}
+      - PROCESSO_SERVICE_PORT=${PROCESSO_SERVICE_PORT}
+      - PROCESSO_DB_URL=jdbc:postgresql://${PROCESSO_DB_HOST}:${PROCESSO_DB_INTERNAL_PORT}/${PROCESSO_DB_NAME}
+      - PROCESSO_DB_USERNAME=${PROCESSO_DB_USERNAME}
+      - PROCESSO_DB_PASSWORD=${PROCESSO_DB_PASSWORD}
+    ports:
+      - "${PROCESSO_SERVICE_PORT}:${PROCESSO_SERVICE_PORT}"
+    depends_on:
+      processo-db:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - juri-network
+
+volumes:
+  cliente-db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/maxjdev/Documentos/docker-volumes/cliente-db
+  processo-db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/maxjdev/Documentos/docker-volumes/processo-db
+
+networks:
+  juri-network:
+    driver: bridge
