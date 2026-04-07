@@ -84,17 +84,7 @@ services:
 
 volumes:
   cliente-db-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/maxjdev/Documentos/docker-volumes/cliente-db
   processo-db-data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/maxjdev/Documentos/docker-volumes/processo-db
 
 networks:
   juri-network:
