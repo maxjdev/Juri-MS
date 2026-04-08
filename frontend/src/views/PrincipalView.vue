@@ -1,15 +1,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { RouterView } from 'vue-router'
+import Principal from '../components/principal/Principal.vue'
 
 export default defineComponent({
-  name: 'App',
+  name: 'PrincipalView',
   components: {
-    RouterView,
+    Principal,
   },
 })
 </script>
 
 <template>
-  <RouterView />
+  <Principal />
 </template>
