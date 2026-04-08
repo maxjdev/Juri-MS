@@ -45,6 +45,14 @@ public class ProcessoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Processo> listaProcessos() {
+        List<Processo> processos = repository.findAll();
+        log.info("Listagem de processos retornou {} registros", processos.size());
+
+        return processos;
+    }
+
+    @Transactional(readOnly = true)
     public Processo buscaProcessoPorId(UUID id) {
         Optional<Processo> processoOptional = repository.findById(id);
 

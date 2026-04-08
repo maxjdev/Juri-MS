@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,6 +26,22 @@ import java.util.UUID;
 @Tag(name = "Clientes", description = "Operações relacionadas a clientes")
 public class ClienteController {
     private final ClienteService service;
+
+    @GetMapping
+    @Operation(summary = "Lista os clientes", description = "Retorna todos os clientes cadastrados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Clientes listados com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClienteDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
+    })
+    public ResponseEntity<List<ClienteDTO>> listaClientes() {
+        List<ClienteDTO> clientes = service.listaClientes()
+                .stream()
+                .map(ClienteDTO::converteParaDto)
+                .toList();
+
+        return ResponseEntity.ok(clientes);
+    }
 
     @PostMapping
     @Operation(summary = "Cria um novo cliente", description = "Cria um cliente e retorna o recurso criado")

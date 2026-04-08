@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.Parameter;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +27,22 @@ import java.util.UUID;
 public class ProcessoController {
     private final ProcessoService service;
 
+    @GetMapping
+    @Operation(summary = "Lista os processos", description = "Retorna todos os processos cadastrados")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Processos listados com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProcessoDTO.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno", content = @Content)
+    })
+    public ResponseEntity<List<ProcessoDTO>> listaProcessos() {
+        List<ProcessoDTO> processos = service.listaProcessos()
+                .stream()
+                .map(ProcessoDTO::converteParaDto)
+                .toList();
+
+        return ResponseEntity.ok(processos);
+    }
+    
     @PostMapping
     @Operation(summary = "Cria um novo processo", description = "Cria um processo e retorna o recurso criado")
     @ApiResponses(value = {
