@@ -1,4 +1,4 @@
-# ⚖️ Juri MS Platform
+# ⚖️ Juri MS
 
 🚧 **Projeto em construção** 🚧
 

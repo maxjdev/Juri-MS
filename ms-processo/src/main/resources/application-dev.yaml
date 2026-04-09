@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: ${PROCESSO_DB_URL}
+    username: ${PROCESSO_DB_USERNAME}
+    password: ${PROCESSO_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.java.processo_service: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

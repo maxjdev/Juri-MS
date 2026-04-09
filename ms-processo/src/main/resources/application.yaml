@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ms-processo
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jackson:
+    time-zone: America/Sao_Paulo
+
+server:
+  port: ${PROCESSO_SERVICE_PORT}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+ms-cliente:
+  url: ${MS_CLIENTE_URL}
