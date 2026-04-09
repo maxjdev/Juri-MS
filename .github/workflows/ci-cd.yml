@@ -29,8 +29,8 @@ jobs:
           file: infra/cliente.Dockerfile
           push: true
           tags: |
-            juri-ms-cliente:latest
-            juri-ms-cliente:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/juri-ms-cliente:latest
+            ${{ secrets.DOCKER_USERNAME }}/juri-ms-cliente:${{ github.sha }}
           no-cache: true
 
       - name: Build and push Processo service
@@ -40,6 +40,6 @@ jobs:
           file: infra/processo.Dockerfile
           push: true
           tags: |
-            juri-ms-processo:latest
-            juri-ms-processo:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/juri-ms-processo:latest
+            ${{ secrets.DOCKER_USERNAME }}/juri-ms-processo:${{ github.sha }}
           no-cache: true
