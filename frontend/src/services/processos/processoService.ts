@@ -21,4 +21,18 @@ export const processoService = {
     const { data } = await processoApi.post<Processo>('/processos', requestPayload)
     return data
   },
+  async atualizar(id: string, payload: ProcessoPayload): Promise<Processo> {
+    const requestPayload = payload.status
+      ? payload
+      : {
+          numeroProcesso: payload.numeroProcesso,
+          clienteId: payload.clienteId,
+        }
+
+    const { data } = await processoApi.put<Processo>(`/processos/${id}`, requestPayload)
+    return data
+  },
+  async excluir(id: string): Promise<void> {
+    await processoApi.delete(`/processos/${id}`)
+  },
 }

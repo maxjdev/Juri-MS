@@ -14,4 +14,11 @@ export const clienteService = {
     const { data } = await clienteApi.post<Cliente>('/clientes', payload)
     return data
   },
+  async atualizar(id: string, payload: ClientePayload): Promise<Cliente> {
+    const { data } = await clienteApi.put<Cliente>(`/clientes/${id}`, payload)
+    return data
+  },
+  async excluir(id: string): Promise<void> {
+    await clienteApi.delete(`/clientes/${id}`)
+  },
 }

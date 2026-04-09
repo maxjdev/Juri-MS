@@ -34,5 +34,15 @@ export const useClienteStore = defineStore('cliente', {
 
       return clienteCriado
     },
+    async atualizar(id: string, payload: ClientePayload) {
+      const clienteAtualizado = await clienteService.atualizar(id, payload)
+      this.items = this.items.map((cliente) => (cliente.id === id ? clienteAtualizado : cliente))
+
+      return clienteAtualizado
+    },
+    async excluir(id: string) {
+      await clienteService.excluir(id)
+      this.items = this.items.filter((cliente) => cliente.id !== id)
+    },
   },
 })

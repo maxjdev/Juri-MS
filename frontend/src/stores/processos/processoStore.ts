@@ -49,5 +49,18 @@ export const useProcessoStore = defineStore('processo', {
 
       return processoCriado
     },
+    async atualizar(id: string, payload: ProcessoPayload) {
+      const processoAtualizado = await processoService.atualizar(id, payload)
+      this.items = this.items.map((processo) => (processo.id === id ? processoAtualizado : processo))
+
+      return processoAtualizado
+    },
+    async excluir(id: string) {
+      await processoService.excluir(id)
+      this.items = this.items.filter((processo) => processo.id !== id)
+    },
+    removerPorClienteId(clienteId: string) {
+      this.items = this.items.filter((processo) => processo.clienteId !== clienteId)
+    },
   },
 })
