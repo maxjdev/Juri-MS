@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { apiConfig } from '../../config/api'
 import type { Processo, ProcessoPayload } from '../../models/processos/Processo'
 
 const processoApi = axios.create({
-  baseURL: import.meta.env.VITE_PROCESSO_API,
+  baseURL: apiConfig.processoBaseUrl,
 })
 
 export const processoService = {
