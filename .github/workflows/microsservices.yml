@@ -1,9 +1,15 @@
-name: CI/CD Pipeline
+name: Microsservices Pipeline
 
 on:
   push:
     branches:
       - main
+    paths:
+      - "ms-cliente/**"
+      - "ms-processo/**"
+      - "infra/cliente.Dockerfile"
+      - "infra/processo.Dockerfile"
+      - ".github/workflows/backend.yml"
 
 jobs:
   build-and-push:
