@@ -73,13 +73,26 @@ Cada microsserviço possui:
 
 ---
 
+### Subir com Docker Compose
+
+1. Ajuste as variáveis em `infra/.env` se precisar trocar portas ou credenciais.
+2. Rode `docker compose --env-file .env -f docker-compose.yml up --build` dentro de `infra/`.
+3. Acesse o frontend em `http://localhost:5173`.
+
+### Frontend Docker MVP
+
+- `infra/frontend.Dockerfile`: usa multistage para separar build e runtime. O stage com Node instala dependências e gera o `dist`; o stage com Nginx entrega só os arquivos estáticos, deixando a imagem final menor e mais simples.
+- `infra/nginx/frontend.conf`: existe porque o Vue Router usa histórico HTML5. Sem `try_files ... /index.html`, um refresh em rota do SPA quebraria no Nginx. O mesmo arquivo também faz proxy de `/api/clientes` e `/api/processos` para os microsserviços, o que simplifica o MVP e evita depender de CORS no navegador.
+- `frontend/src/config/api.ts`: centraliza a regra de URL das APIs. Em produção o frontend chama `/api`; em desenvolvimento local, continua podendo usar `VITE_CLIENTE_API` e `VITE_PROCESSO_API`.
+- `infra/docker-compose.yml`: ganhou o serviço `frontend` para publicar o Nginx na mesma rede dos microsserviços. Isso é o que permite ao proxy resolver `ms-cliente` e `ms-processo` por nome.
+
 ## 📌 Status do projeto
 
 - [x] CRUD de Cliente
 - [x] CRUD de Processo
 - [x] Comunicação entre microsserviços via HTTP
 - [x] Configuração inicial de infraestrutura
-- [ ] Frontend integrado
+- [x] Frontend integrado
 - [ ] Docker Compose completo para Produção
 - [ ] CI/CD
 - [ ] API Gateway

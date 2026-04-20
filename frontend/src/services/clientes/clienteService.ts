@@ -1,8 +1,9 @@
 import axios from 'axios'
+import { apiConfig } from '../../config/api'
 import type { Cliente, ClientePayload } from '../../models/clientes/Cliente'
 
 const clienteApi = axios.create({
-  baseURL: import.meta.env.VITE_CLIENTE_API,
+  baseURL: apiConfig.clienteBaseUrl,
 })
 
 export const clienteService = {

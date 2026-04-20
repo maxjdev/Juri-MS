@@ -84,6 +84,21 @@ services:
     networks:
       - juri-network
 
+  frontend:
+    build:
+      context: ..
+      dockerfile: infra/frontend.Dockerfile
+    container_name: frontend
+    env_file: .env
+    ports:
+      - "${FRONTEND_EXTERNAL_PORT}:${FRONTEND_INTERNAL_PORT}"
+    depends_on:
+      - ms-cliente
+      - ms-processo
+    restart: unless-stopped
+    networks:
+      - juri-network
+
 volumes:
   cliente-db-data:
   processo-db-data:
